@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library Management System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    h1 {
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 10px;
+    }
+    input[type="text"] {
+      padding: 5px;
+      width: 200px;
+    }
+    button {
+      padding: 5px 10px;
+      margin-left: 5px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: #fff;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #eee;
+    }
+    .search-input {
+      margin-bottom: 10px;
+      padding: 5px;
+      width: 250px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Library Management System</h1>
+
+  <!-- Add Book -->
+  <div>
+    <h3>Add a Book</h3>
+    <div class="form-group">
+      <input type="text" id="bookTitle" placeholder="Book Title">
+      <input type="text" id="bookAuthor" placeholder="Author">
+      <button onclick="addBook()">Add Book</button>
+    </div>
+  </div>
+
+  <!-- Search Book -->
+  <div>
+    <h3>Search Books</h3>
+    <input type="text" id="searchInput" class="search-input" placeholder="Search by title or author" onkeyup="searchBooks()">
+  </div>
+
+  <!-- Book List Table -->
+  <table id="bookTable">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Books will appear here -->
+    </tbody>
+  </table>
+
+  <script>
+    // Array to store books
+    let books = [];
+
+    // Function to add a book
+    function addBook() {
+      const title = document.getElementById('bookTitle').value.trim();
+      const author = document.getElementById('bookAuthor').value.trim();
+
+      if(title === "" || author === "") {
+        alert("Please enter both title and author");
+        return;
+      }
+
+      // Add book to array
+      books.push({ title, author });
+
+      // Clear input fields
+      document.getElementById('bookTitle').value = '';
+      document.getElementById('bookAuthor').value = '';
+
+      // Update the table
+      renderTable();
+    }
+
+    // Function to remove a book
+    function removeBook(index) {
+      books.splice(index, 1);
+      renderTable();
+    }
+
+    // Function to render the table
+    function renderTable() {
+      const tbody = document.getElementById('bookTable').querySelector('tbody');
+      tbody.innerHTML = '';
+
+      books.forEach((book, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${book.title}</td>
+          <td>${book.author}</td>
+          <td><button onclick="removeBook(${index})">Remove</button></td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // Function to search books
+    function searchBooks() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const tbody = document.getElementById('bookTable').querySelector('tbody');
+      tbody.innerHTML = '';
+
+      books.forEach((book, index) => {
+        if(book.title.toLowerCase().includes(query) || book.author.toLowerCase().includes(query)) {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${book.title}</td>
+            <td>${book.author}</td>
+            <td><button onclick="removeBook(${index})">Remove</button></td>
+          `;
+          tbody.appendChild(row);
+        }
+      });
+    }
+  </script>
+</body>
+</html>
